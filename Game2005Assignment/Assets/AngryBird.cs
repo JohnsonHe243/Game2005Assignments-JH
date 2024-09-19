@@ -16,7 +16,7 @@ public class AngryBird : MonoBehaviour
         {
             Debug.Log("Launch!");
             velocity = new Vector3(10, 16);
-            transform.position = Vector3.zero;
+            transform.position = new Vector3(0, startHeight, 0);
             Debug.DrawLine(transform.position, transform.position + velocity, Color.red, 2);
         }
     }
@@ -29,6 +29,6 @@ public class AngryBird : MonoBehaviour
 
         Debug.DrawLine(prevPos, transform.position, Color.green, 10);
 
-        velocity = velocity = gravityAcceleration * deltaTime;
+        velocity = velocity + gravityAcceleration * deltaTime;
     }
 }
