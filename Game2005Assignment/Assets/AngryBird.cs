@@ -6,7 +6,7 @@ public class AngryBird : MonoBehaviour
     public float speed = 1f;
     public float startHeight = 1;
 
-    public float angleRadiant;
+    public float angleRadians;
     public float x;
     public float y;
 
@@ -21,6 +21,8 @@ public class AngryBird : MonoBehaviour
         //    Debug.Log("Launch!");
 
         //    //velocity = new Vector3(10, 16);
+
+
         //    x = (Mathf.Cos(angleDegrees) * speed);
         //    //y = (float)(speed * Mathf.Sin(angleDegrees));
         //    y = Mathf.Sqrt(Mathf.Pow(speed, 2) - Mathf.Pow(x, 2));
@@ -34,7 +36,7 @@ public class AngryBird : MonoBehaviour
         {
             Debug.Log("Launch!");
 
-            angleRadiant = angleDegrees * Mathf.Deg2Rad;
+            angleRadians = angleDegrees * Mathf.Deg2Rad;
             x = speed * Mathf.Cos(angleRadiant);
             y = speed * Mathf.Sin(angleRadiant);
 
@@ -47,7 +49,6 @@ public class AngryBird : MonoBehaviour
 
     private void FixedUpdate()
     {
-
 
         Vector3 prevPos = transform.position;
 
