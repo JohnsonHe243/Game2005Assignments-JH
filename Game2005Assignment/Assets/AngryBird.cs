@@ -37,8 +37,8 @@ public class AngryBird : MonoBehaviour
             Debug.Log("Launch!");
 
             angleRadians = angleDegrees * Mathf.Deg2Rad;
-            x = speed * Mathf.Cos(angleRadiant);
-            y = speed * Mathf.Sin(angleRadiant);
+            x = speed * Mathf.Cos(angleRadians);
+            y = speed * Mathf.Sin(angleRadians);
 
             velocity = new Vector3(x, y);
 
