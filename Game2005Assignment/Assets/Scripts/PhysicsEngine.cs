@@ -39,7 +39,8 @@ public class PhysicsEngine : MonoBehaviour
             objectA.transform.position += objectA.velocity * dt;
             // velocity update according to gravity acceleration
             objectA.velocity += gravityAcceleration * dt;
-            // Drag: TODO
+            // drag 
+            objectA.velocity = objectA.velocity * objectA.drag;
 
             //Debug drawing
             Debug.DrawLine(prevPos, newPos, Color.green, 10);
