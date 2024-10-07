@@ -10,10 +10,9 @@ public class AngryBird : MonoBehaviour
 
     void Update()
     {
-
-
         Vector3 launchVelocity = new Vector3(speed * Mathf.Cos(angleDegrees * Mathf.Deg2Rad),
                                             speed * Mathf.Sin(angleDegrees * Mathf.Deg2Rad));
+
         Vector3 startPosition = new Vector3(0, startHeight, 0);
 
         if (Input.GetKeyDown(KeyCode.Space))
