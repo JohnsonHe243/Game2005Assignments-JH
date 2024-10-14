@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mass: 1
-  drag: 1
+  drag: 0.1
   velocity: {x: 0, y: 0, z: 0}
 --- !u!212 &2975624308804261169
 SpriteRenderer:

@@ -33,15 +33,16 @@ public class PhysicsEngine : MonoBehaviour
         {
             Vector3 prevPos = objectA.transform.position;
             Vector3 newPos = objectA.transform.position + objectA.velocity * dt;
-
-
             // position
-            objectA.transform.position += objectA.velocity * dt;
+            objectA.transform.position= newPos;
             // velocity update according to gravity acceleration
-            objectA.velocity += gravityAcceleration * dt;
-            // drag
-            objectA.velocity = objectA.velocity * objectA.drag;
-
+            Vector3 accelerationThisframe = gravityAcceleration;
+            Vector3 vSquared = objectA.velocity.normalized * objectA.velocity.sqrMagnitude;
+            Vector3 dragAcceleration = -objectA.drag * vSquared; // -c * v^2
+            //Add acceleration due to drag
+            accelerationThisframe += dragAcceleration;
+            //Apply acceleration
+            objectA.velocity += accelerationThisframe * dt;
             //Debug drawing
             Debug.DrawLine(prevPos, newPos, Color.green, 10);
             Debug.DrawLine(objectA.transform.position, objectA.transform.position + objectA.velocity, Color.red);
