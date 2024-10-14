@@ -33,9 +33,9 @@ public class PhysicsEngine : MonoBehaviour
         {
             Vector3 prevPos = objectA.transform.position;
             Vector3 newPos = objectA.transform.position + objectA.velocity * dt;
-            // position
+            //position
             objectA.transform.position= newPos;
-            // velocity update according to gravity acceleration
+            //velocity update according to gravity acceleration
             Vector3 accelerationThisframe = gravityAcceleration;
             Vector3 vSquared = objectA.velocity.normalized * objectA.velocity.sqrMagnitude;
             Vector3 dragAcceleration = -objectA.drag * vSquared; // -c * v^2
@@ -47,5 +47,27 @@ public class PhysicsEngine : MonoBehaviour
             Debug.DrawLine(prevPos, newPos, Color.green, 10);
             Debug.DrawLine(objectA.transform.position, objectA.transform.position + objectA.velocity, Color.red);
         }
+        foreach(PhysicsObject objectA in objects)
+        {
+            foreach(PhysicsObject objectB in objects)
+            {
+                //Check for collisions between objects
+                if(IsOverlappingSpheres(objectA, objectB))
+                {
+                    //colliding
+                    Debug.DrawLine(objectA.transform.position, objectB.transform.position, Color.green);
+                }
+                else
+                {
+                    //no collisions
+                }
+            }
+
+        }
+    }
+    public bool IsOverlappingSpheres(PhysicsObject objectA, PhysicsObject objectB)
+    {
+        Debug.Log("checking collision between: " + objectA.name + " and " + objectB.name);
+        return false;
     }
 }

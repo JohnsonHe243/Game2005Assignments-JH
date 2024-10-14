@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PhysicsObject : MonoBehaviour
 {
+    public float radius = 1;
     public float mass = 1.0f;
     public float drag = 0.1f;
     public Vector3 velocity = Vector3.zero;
@@ -12,9 +13,13 @@ public class PhysicsObject : MonoBehaviour
         PhysicsEngine.Instance.objects.Add(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnValidate() // only workds in editor, not in build.
     {
-        // PhysicsEngine.Instance.gravityAcceleration;
+        transform.localScale = new Vector3(radius, radius, radius) * 2f;
+    }
+
+    private void Update() // only workds in editor, not in build.
+    {
+        transform.localScale = new Vector3(radius, radius, radius) * 2f;
     }
 }
