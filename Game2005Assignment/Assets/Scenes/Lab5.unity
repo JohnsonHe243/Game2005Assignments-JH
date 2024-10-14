@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 1
   mass: 1
   drag: 0.1
   velocity: {x: -5, y: 2, z: 0}
@@ -308,7 +309,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.3, y: 4.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -438,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 1
   mass: 1
   drag: 0.1
   velocity: {x: 4, y: 4, z: 0}
@@ -501,7 +503,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.9, y: 7.3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -667,6 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 1
   mass: 1
   drag: 0.1
   velocity: {x: 9, y: 8, z: 0}
@@ -730,7 +733,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13.868, y: 7.473, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -834,7 +837,7 @@ MonoBehaviour:
   angleDegrees: 50
   speed: 20
   startHeight: 1
-  projectileToCopy: {fileID: 6981873694824655212, guid: b37ad130ca5e9954f973a6dd28d2998f, type: 3}
+  projectileToCopy: {fileID: 273510099}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
