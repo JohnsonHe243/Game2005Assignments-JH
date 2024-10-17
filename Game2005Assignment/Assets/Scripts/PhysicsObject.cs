@@ -2,24 +2,16 @@ using UnityEngine;
 
 public class PhysicsObject : MonoBehaviour
 {
-    public float radius = 1;
+    public PhysicsShape shape = null;
     public float mass = 1.0f;
     public float drag = 0.1f;
+    public float gravityScale = 1;
     public Vector3 velocity = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
     {
+        shape = GetComponent<PhysicsShape>();
         PhysicsEngine.Instance.objects.Add(this);
-    }
-
-    private void OnValidate() // only workds in editor, not in build.
-    {
-        transform.localScale = new Vector3(radius, radius, radius) * 2f;
-    }
-
-    private void Update() // only workds in editor, not in build.
-    {
-        transform.localScale = new Vector3(radius, radius, radius) * 2f;
     }
 }

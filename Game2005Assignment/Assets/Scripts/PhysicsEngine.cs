@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PhysicsEngine : MonoBehaviour
@@ -21,67 +22,107 @@ public class PhysicsEngine : MonoBehaviour
     public Vector3 gravityAcceleration = new Vector3(0, -10, 0);
 
     // Start is called before the first frame update
-    void Start()
+    private void KinematicUpdate()
     {
-        
+        foreach (PhysicsObject objectA in objects)
+        {
+            Vector3 prevPos = objectA.transform.position;
+            Vector3 newPos = objectA.transform.position + objectA.velocity * dt;
+
+            // Position
+            objectA.transform.position = newPos;
+
+            // Velocity update according to gravity acceleration
+            Vector3 accelerationThisFrame = gravityAcceleration * objectA.gravityScale;
+
+            Vector3 vSquared = objectA.velocity.normalized * objectA.velocity.magnitude;
+
+            Vector3 dragAcceleration = -objectA.drag * vSquared;
+
+            // Add acceleration due to drag
+            accelerationThisFrame += dragAcceleration;
+
+            // Apply acceleration
+            objectA.velocity = accelerationThisFrame * dt;
+
+            // Debug drawing
+            Debug.DrawLine(prevPos, newPos, Color.green, 10);
+            Debug.DrawLine(objectA.transform.position, objectA.transform.position + objectA.velocity, Color.red);
+
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach(PhysicsObject objectA in objects)
-        {
-            Vector3 prevPos = objectA.transform.position;
-            Vector3 newPos = objectA.transform.position + objectA.velocity * dt;
-            //position
-            objectA.transform.position= newPos;
-            //velocity update according to gravity acceleration
-            Vector3 accelerationThisframe = gravityAcceleration;
-            Vector3 vSquared = objectA.velocity.normalized * objectA.velocity.sqrMagnitude;
-            Vector3 dragAcceleration = -objectA.drag * vSquared; // -c * v^2
-            //Add acceleration due to drag
-            accelerationThisframe += dragAcceleration;
-            //Apply acceleration
-            objectA.velocity += accelerationThisframe * dt;
-            //Debug drawing
-            Debug.DrawLine(prevPos, newPos, Color.green, 10);
-            Debug.DrawLine(objectA.transform.position, objectA.transform.position + objectA.velocity, Color.red);
-        }
-        foreach(PhysicsObject obj in objects)
+        foreach (PhysicsObject obj in objects)
         {
             obj.GetComponent<Renderer>().material.color = Color.white;
         }
-        //Collision check loop
+        KinematicUpdate();
+        CollisionUpdate();
+    }
+    
+    // Check for collision between objects.
+    private void CollisionUpdate()
+    {
         for (int i = 0; i < objects.Count; i++) // N
         {
             PhysicsObject objectA = objects[i];
-            for (int j = i  + 1; j < objects.Count; j++) // N
+
+            for (int j = i + 1; j < objects.Count; j++) // N
             {
                 PhysicsObject objectB = objects[j];
-                if (objectA == objectB) continue;
-                //Check for collisions between objects
-                if (IsOverlappingSpheres(objectA, objectB))
+
+                bool isOverlapping = false;
+
+                if (objectA.shape.GetShape() == PhysicsShape.Shape.Sphere &&
+                    objectB.shape.GetShape() == PhysicsShape.Shape.Sphere)
                 {
-                    //colliding
+                    isOverlapping = IsOverlappingSpheres(objectA, objectB);
+                }
+                else if (objectA.shape.GetShape() == PhysicsShape.Shape.Sphere &&
+                            objectB.shape.GetShape() == PhysicsShape.Shape.Sphere)
+                {
+                    isOverlapping = IsOverlappingSpherePlane((PhysicsShapeSphere)objectA.shape, (PhysicsShapePlane)objectB.shape);
+                }
+                else if (objectA.shape.GetShape() == PhysicsShape.Shape.Plane &&
+                            objectB.shape.GetShape() == PhysicsShape.Shape.Plane)
+                {
+                    isOverlapping = IsOverlappingSpherePlane((PhysicsShapeSphere)objectB.shape, (PhysicsShapePlane)objectA.shape);
+                }
+
+                if (isOverlapping)
+                {
+                    // Colliding
                     Debug.DrawLine(objectA.transform.position, objectB.transform.position, Color.red);
-                    //objectA.velocity = -objectA.velocity;
-                    //objectB.velocity = -objectB.velocity;
-                    //color change
-                    objectA.GetComponent<Renderer>().material.color= Color.red;
+
+                    // Changing the color for colliding objects.
+                    objectA.GetComponent<Renderer>().material.color = Color.red;
                     objectB.GetComponent<Renderer>().material.color = Color.red;
                 }
-                else
-                {
-                    //no collisions
-                }
             }
+
         }
     }
-    public bool IsOverlappingSpheres(PhysicsObject objectA, PhysicsObject objectB)
+    public static bool IsOverlappingSpheres(PhysicsObject objectA, PhysicsObject objectB)
     {
         Debug.Log("checking collision between: " + objectA.name + " and " + objectB.name);
         Vector3 d = objectA.transform.position - objectB.transform.position;
         float distance = d.magnitude;
-        return distance < objectA.radius + objectB.radius;
+
+        float radiusA = ((PhysicsShapeSphere)objectA.shape).radius;
+        float radiusB = ((PhysicsShapeSphere) objectB.shape).radius;
+
+        return distance < radiusA + radiusB;
     }
+
+    public static bool IsOverlappingSpherePlane(PhysicsShapeSphere sphere, PhysicsShapePlane plane)
+    {
+        Vector3 planeTosphere = sphere.transform.position - plane.transform.position;
+        float positionAlongNormal = Vector3.Dot(planeTosphere, plane.Normal());
+        float distanceToPlane = Mathf.Abs(positionAlongNormal);
+        return distanceToPlane < sphere.radius;
+
+    } 
 }
