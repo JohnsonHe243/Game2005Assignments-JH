@@ -249,7 +249,7 @@ MonoBehaviour:
   shape: {fileID: 0}
   mass: 1
   drag: 0.01
-  gravityScale: 0
+  gravityScale: 1
   velocity: {x: 5, y: 8, z: 0}
 --- !u!23 &273510101
 MeshRenderer:
@@ -458,7 +458,7 @@ MonoBehaviour:
   shape: {fileID: 0}
   mass: 1
   drag: 0.01
-  gravityScale: 0
+  gravityScale: 1
   velocity: {x: 4, y: 4, z: 0}
 --- !u!23 &664318750
 MeshRenderer:
@@ -700,8 +700,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shape: {fileID: 0}
   mass: 1
-  drag: 0.01
-  gravityScale: 1
+  drag: 0
+  gravityScale: 0
   velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &1946561300
 GameObject:
@@ -738,7 +738,7 @@ MonoBehaviour:
   shape: {fileID: 0}
   mass: 1
   drag: 0.01
-  gravityScale: 0
+  gravityScale: 1
   velocity: {x: 9, y: 8, z: 0}
 --- !u!23 &1946561302
 MeshRenderer:
@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angleDegrees: 50
-  speed: 20
+  speed: 50
   startHeight: 1
   projectileToCopy: {fileID: 273510099}
 --- !u!1660057539 &9223372036854775807
