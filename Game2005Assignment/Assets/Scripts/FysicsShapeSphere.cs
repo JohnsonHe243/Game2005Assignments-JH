@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PhysicsShapeSphere : PhysicsShape
+public class FysicsShapeSphere : FysicsShape
 {
     public float radius = 1.0f;
 

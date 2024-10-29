@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PhysicsObject : MonoBehaviour
+public class FysicsObject : MonoBehaviour
 {
-    public PhysicsShape shape = null;
+    public FysicsShape shape = null;
     public float mass = 1.0f;
     public float drag = 0.1f;
     public float gravityScale = 1;
@@ -11,7 +11,7 @@ public class PhysicsObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        shape = GetComponent<PhysicsShape>();
-        PhysicsEngine.Instance.objects.Add(this);
+        shape = GetComponent<FysicsShape>();
+        FysicsEngine.Instance.objects.Add(this);
     }
 }

@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 273510102}
   - component: {fileID: 273510101}
   - component: {fileID: 273510100}
+  - component: {fileID: 273510104}
   m_Layer: 0
   m_Name: A
   m_TagString: Untagged
@@ -245,10 +246,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  shape: {fileID: 0}
   mass: 1
-  drag: 0.1
-  velocity: {x: -5, y: 2, z: 0}
+  drag: 0.01
+  gravityScale: 0
+  velocity: {x: 5, y: 8, z: 0}
 --- !u!23 &273510101
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -314,6 +316,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &273510104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273510099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8f3db51e25754185dedfde697bdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
 --- !u!1 &340319301
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +435,7 @@ GameObject:
   - component: {fileID: 664318751}
   - component: {fileID: 664318750}
   - component: {fileID: 664318749}
+  - component: {fileID: 664318753}
   m_Layer: 0
   m_Name: B
   m_TagString: Untagged
@@ -439,9 +455,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  shape: {fileID: 0}
   mass: 1
-  drag: 0.1
+  drag: 0.01
+  gravityScale: 0
   velocity: {x: 4, y: 4, z: 0}
 --- !u!23 &664318750
 MeshRenderer:
@@ -508,6 +525,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &664318753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664318748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8f3db51e25754185dedfde697bdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
 --- !u!1 &1448765611
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +567,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493457845b0695a4ab1e296cc13a80dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objects: []
+  objects:
+  - {fileID: 273510100}
+  - {fileID: 664318749}
+  - {fileID: 1946561301}
   dt: 0.02
   gravityAcceleration: {x: 0, y: -10, z: 0}
 --- !u!4 &1448765613
@@ -566,6 +599,8 @@ GameObject:
   - component: {fileID: 1721631762}
   - component: {fileID: 1721631761}
   - component: {fileID: 1721631760}
+  - component: {fileID: 1721631764}
+  - component: {fileID: 1721631763}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -632,12 +667,42 @@ Transform:
   m_GameObject: {fileID: 1721631758}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 49, y: 0, z: 0}
+  m_LocalPosition: {x: 49.6, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721631763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721631758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6be53a2efd643424ab034aebf9781d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planeType: 0
+--- !u!114 &1721631764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721631758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shape: {fileID: 0}
+  mass: 1
+  drag: 0.01
+  gravityScale: 1
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &1946561300
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +715,7 @@ GameObject:
   - component: {fileID: 1946561303}
   - component: {fileID: 1946561302}
   - component: {fileID: 1946561301}
+  - component: {fileID: 1946561305}
   m_Layer: 0
   m_Name: C
   m_TagString: Untagged
@@ -669,9 +735,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f207ef63be1648a7fd6e4e73d914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  shape: {fileID: 0}
   mass: 1
-  drag: 0.1
+  drag: 0.01
+  gravityScale: 0
   velocity: {x: 9, y: 8, z: 0}
 --- !u!23 &1946561302
 MeshRenderer:
@@ -738,6 +805,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1946561305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946561300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae8f3db51e25754185dedfde697bdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1
 --- !u!1 &1986279038
 GameObject:
   m_ObjectHideFlags: 0

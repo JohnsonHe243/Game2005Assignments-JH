@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class PhysicsShape : MonoBehaviour 
+public abstract class FysicsShape : MonoBehaviour 
 {
     public enum Shape
     {
