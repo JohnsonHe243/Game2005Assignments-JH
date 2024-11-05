@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angleDegrees: 50
-  speed: 50
+  speed: 20
   startHeight: 1
   projectileToCopy: {fileID: 273510099}
 --- !u!1660057539 &9223372036854775807

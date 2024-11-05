@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FysicsEngine : MonoBehaviour
@@ -80,17 +82,17 @@ public class FysicsEngine : MonoBehaviour
                 if (objectA.shape.GetShape() == FysicsShape.Shape.Sphere &&
                     objectB.shape.GetShape() == FysicsShape.Shape.Sphere)
                 {
-                    isOverlapping = IsOverlappingSpheres(objectA, objectB);
+                    isOverlapping = CollideSpheres((FysicsShapeSphere)objectA.shape, (FysicsShapeSphere)objectB.shape);
                 }
                 else if (objectA.shape.GetShape() == FysicsShape.Shape.Sphere &&
                          objectB.shape.GetShape() == FysicsShape.Shape.Plane)
                 {
-                    isOverlapping = IsOverlappingSpherePlane((FysicsShapeSphere)objectA.shape, (FysicsShapePlane)objectB.shape);
+                    isOverlapping = IsCollidingSpherePlane((FysicsShapeSphere)objectA.shape, (FysicsShapePlane)objectB.shape);
                 }
                 else if (objectA.shape.GetShape() == FysicsShape.Shape.Plane &&
                          objectB.shape.GetShape() == FysicsShape.Shape.Sphere)
                 {
-                    isOverlapping = IsOverlappingSpherePlane((FysicsShapeSphere)objectB.shape, (FysicsShapePlane)objectA.shape);
+                    isOverlapping = IsCollidingSpherePlane((FysicsShapeSphere)objectB.shape, (FysicsShapePlane)objectA.shape);
                 }
 
                 if (isOverlapping)
@@ -105,22 +107,53 @@ public class FysicsEngine : MonoBehaviour
             }
         }
     }
-    public static bool IsOverlappingSpheres(FysicsObject objectA, FysicsObject objectB)
+
+    public static bool CollideSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
     {
-        Debug.Log("checking collision between: " + objectA.name + " and " + objectB.name);
-        Vector3 d = objectA.transform.position - objectB.transform.position;
-        float distance = d.magnitude;
-
-        float radiusA = ((FysicsShapeSphere)objectA.shape).radius;
-        float radiusB = ((FysicsShapeSphere)objectB.shape).radius;
-
-        return distance < radiusA + radiusB;
+        Vector3 Displacement= sphereA.transform.position - sphereB.transform.position;
+        float distance = Displacement.magnitude;
+        float overlap = (sphereA.radius + sphereB.radius) - distance;
+        if (overlap > 0.0f)
+        {
+            Vector3 collisionNormalBtoA = (Displacement / distance);
+            Vector3 minTranslationV = collisionNormalBtoA * overlap;
+            sphereA.transform.position += minTranslationV/2;
+            sphereB.transform.position -= minTranslationV/2;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public static bool IsCollidingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
+    {
+        Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
+        float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
+        float distanceToPlane = Mathf.Abs(positionAlongNormal);
+        float overlap = sphere.radius - distanceToPlane;
+        if (overlap > 0.0f)
+        {
+            Vector3 minTranslationV = plane.Normal() * overlap;
+            sphere.transform.position += minTranslationV;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
+    public static bool IsOverlappingSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
+    {
+        Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
+        float distance = Displacement.magnitude;
+        return distance < sphereA.radius + sphereB.radius;
+    }
     public static bool IsOverlappingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
     {
-        Vector3 planeTosphere = sphere.transform.position - plane.transform.position;
-        float positionAlongNormal = Vector3.Dot(planeTosphere, plane.Normal());
+        Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
+        float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
         float distanceToPlane = Mathf.Abs(positionAlongNormal);
         return distanceToPlane < sphere.radius;
     } 
