@@ -89,11 +89,21 @@ public class FysicsEngine : MonoBehaviour
                 {
                     isOverlapping = IsCollidingSpherePlane((FysicsShapeSphere)objectA.shape, (FysicsShapePlane)objectB.shape);
                 }
-                else if (objectA.shape.GetShape() == FysicsShape.Shape.Plane &&
-                         objectB.shape.GetShape() == FysicsShape.Shape.Sphere)
+                else if (objectA.shape.GetShape() == FysicsShape.Shape.Sphere &&
+                         objectB.shape.GetShape() == FysicsShape.Shape.Plane)
                 {
-                    isOverlapping = IsCollidingSpherePlane((FysicsShapeSphere)objectB.shape, (FysicsShapePlane)objectA.shape);
+                    isOverlapping = IsCollidingSpherePlane((FysicsShapeSphere)objectA.shape, (FysicsShapePlane)objectB.shape);
                 }
+                else if (objectA.shape.GetShape() == FysicsShape.Shape.Cuboid &&
+                         objectB.shape.GetShape() == FysicsShape.Shape.Cuboid)
+                {
+                    isOverlapping = CollideCuboids((FysicsShapeCuboid)objectA.shape, (FysicsShapeCuboid)objectB.shape);
+                }
+                //else if (objectA.shape.GetShape() == FysicsShape.Shape.Sphere &&
+                //         objectB.shape.GetShape() == FysicsShape.Shape.Cuboid)
+                //{
+                //    isOverlapping = CollideSphereCuboid((FysicsShapeSphere)objectA.shape, (FysicsShapeCuboid)objectB.shape);
+                //}
 
                 if (isOverlapping)
                 {
@@ -126,6 +136,28 @@ public class FysicsEngine : MonoBehaviour
             return false;
         }
     }
+    public static bool CollideCuboids(FysicsShapeCuboid cuboidA, FysicsShapeCuboid cuboidB)
+    {
+        Vector3 Displacement = cuboidA.transform.position - cuboidB.transform.position;
+        float distance = Displacement.magnitude;
+        float overlapX = (cuboidA.width / 2 + cuboidB.width / 2) - distance;
+        float overlapY = (cuboidA.width / 2 + cuboidB.height / 2) - distance;
+
+        if (overlapX > 0.0f && overlapY > 0.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool CollideSphereCuboid(FysicsShapeSphere sphere, FysicsShapeCuboid cuboid)
+    {
+        return true;
+    }
+
     public static bool IsCollidingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
     {
         Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
@@ -144,17 +176,17 @@ public class FysicsEngine : MonoBehaviour
         }
     }
 
-    public static bool IsOverlappingSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
-    {
-        Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
-        float distance = Displacement.magnitude;
-        return distance < sphereA.radius + sphereB.radius;
-    }
-    public static bool IsOverlappingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
-    {
-        Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
-        float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
-        float distanceToPlane = Mathf.Abs(positionAlongNormal);
-        return distanceToPlane < sphere.radius;
-    } 
+    //public static bool IsOverlappingSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
+    //{
+    //    Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
+    //    float distance = Displacement.magnitude;
+    //    return distance < sphereA.radius + sphereB.radius;
+    //}
+    //public static bool IsOverlappingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
+    //{
+    //    Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
+    //    float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
+    //    float distanceToPlane = Mathf.Abs(positionAlongNormal);
+    //    return distanceToPlane < sphere.radius;
+    //} 
 }
