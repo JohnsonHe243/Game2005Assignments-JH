@@ -134,8 +134,9 @@ public class FysicsEngine : MonoBehaviour
         float overlap = sphere.radius - distanceToPlane;
         if (overlap > 0.0f)
         {
-            Vector3 minTranslationV = plane.Normal() * overlap;
-            sphere.transform.position += minTranslationV;
+            //Vector3 minTranslationV = plane.Normal() * overlap;
+            //sphere.transform.position += minTranslationV;
+            sphere.transform.position += plane.Normal() * overlap;
             return true;
         }
         else
