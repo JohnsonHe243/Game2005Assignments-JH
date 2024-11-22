@@ -142,9 +142,24 @@ public class FysicsEngine : MonoBehaviour
         float distance = Displacement.magnitude;
         float overlapX = (cuboidA.width / 2 + cuboidB.width / 2) - distance;
         float overlapY = (cuboidA.width / 2 + cuboidB.height / 2) - distance;
+        float overlap;
 
         if (overlapX > 0.0f && overlapY > 0.0f)
         {
+            // Ensure minimum overlap is used (for 2D; expand for 3D if needed).
+            if (overlapX > overlapY)
+            {
+                overlap = overlapX;
+            }
+            else
+            {
+                overlap = overlapY;
+            }
+
+            Vector3 collisionNormalBtoA = (Displacement / distance);
+            Vector3 minTranslationV = collisionNormalBtoA * overlap;
+            cuboidA.transform.position += minTranslationV / 2;
+            cuboidB.transform.position -= minTranslationV / 2;
             return true;
         }
         else
