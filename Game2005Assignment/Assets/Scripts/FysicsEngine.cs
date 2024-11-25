@@ -146,8 +146,9 @@ public class FysicsEngine : MonoBehaviour
 
         if (overlapX > 0.0f && overlapY > 0.0f)
         {
-            // Ensure minimum overlap is used (for 2D; expand for 3D if needed).
-            if (overlapX > overlapY)
+            // Ensure minimum overlap is used (for 2D; expand for 3D if needed). 
+            if (overlapX > overlapY) // Modified from chatgpt code: overlap = std::min(overlapX, overlapY);
+
             {
                 overlap = overlapX;
             }
