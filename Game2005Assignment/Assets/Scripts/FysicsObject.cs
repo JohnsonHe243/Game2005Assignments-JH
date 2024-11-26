@@ -11,6 +11,9 @@ public class FysicsObject : MonoBehaviour
 
     public float gravityScale = 1;
     public Vector3 velocity = Vector3.zero;
+    public Vector3 netForce = Vector3.zero;
+
+    public bool isStatic = false;
 
     public bool isStatic = false;
 
@@ -18,6 +21,6 @@ public class FysicsObject : MonoBehaviour
     void Start()
     {
         shape = GetComponent<FysicsShape>();
-        FysicsEngine.Instance.objects.Add(this);
+        FysicsEngine.Instance.objekts.Add(this);
     }
 }
