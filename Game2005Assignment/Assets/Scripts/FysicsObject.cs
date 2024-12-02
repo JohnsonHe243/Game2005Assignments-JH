@@ -15,8 +15,6 @@ public class FysicsObject : MonoBehaviour
 
     public bool isStatic = false;
 
-    public bool isStatic = false;
-
     // Start is called before the first frame update
     void Start()
     {

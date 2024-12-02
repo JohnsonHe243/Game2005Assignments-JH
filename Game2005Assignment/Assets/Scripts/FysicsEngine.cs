@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class FysicsEngine : MonoBehaviour
 {
-
     public struct CollisionInfo
     {
         public bool didcollide;
@@ -165,7 +164,6 @@ public class FysicsEngine : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
     public static bool CollideSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
     {
         Vector3 Displacement= sphereA.transform.position - sphereB.transform.position;
@@ -203,10 +201,7 @@ public class FysicsEngine : MonoBehaviour
         }
     }
 
-    public static bool IsOverlappingSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
-=======
     public static CollisionInfo CollisionResponseSphereSphere(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
->>>>>>> Stashed changes
     {
         Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
         float distance = Displacement.magnitude;
