@@ -149,8 +149,7 @@ public class FysicsEngine : MonoBehaviour
                     if(veloARelativeToBProjectedOntoPlane.sqrMagnitude > 0.00001)
                     {
                         // Magnitude of friction is coefficient of friction times normal force magnitude
-                        float coefficientOfFriction = 0.5f;
-                        float frictionMagnitude = Fn.magnitude * coefficientOfFriction;
+                        float frictionMagnitude = Fn.magnitude * objektA.coefficientOfFriction;
                         Vector3 Ff = -veloARelativeToBProjectedOntoPlane.normalized * frictionMagnitude;
 
                         Debug.DrawRay(objektA.transform.position, Ff, new Color(0.8f, 0.6f, 0.0f));

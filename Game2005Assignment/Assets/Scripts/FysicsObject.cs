@@ -9,11 +9,14 @@ public class FysicsObject : MonoBehaviour
     [Range(0f, 1f)]
     public float drag = 0.1f;
 
-    public float gravityScale = 1;
+    public float gravityScale = 0.5f;
+    public float coefficientOfFriction;
     public Vector3 velocity = Vector3.zero;
     public Vector3 netForce = Vector3.zero;
 
     public bool isStatic = false;
+
+
 
     // Start is called before the first frame update
     void Start()
