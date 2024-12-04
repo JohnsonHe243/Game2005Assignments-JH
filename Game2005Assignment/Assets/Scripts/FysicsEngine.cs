@@ -66,8 +66,9 @@ public class FysicsEngine : MonoBehaviour
                 objekt.transform.position = newPos;
 
                 // Debug drawing
+
                 // Velocity
-                Debug.DrawRay(objekt.transform.position, objekt.velocity, Color.red);
+                Debug.DrawRay(objekt.transform.position, objekt.velocity, Color.magenta);
                 // Force of gravity
                 Debug.DrawRay(objekt.transform.position, Fg, new Color(0.5f, 0.0f, 0.4f));
             }
@@ -153,6 +154,8 @@ public class FysicsEngine : MonoBehaviour
                         Vector3 Ff = -veloARelativeToBProjectedOntoPlane.normalized * frictionMagnitude;
 
                         Debug.DrawRay(objektA.transform.position, Ff, new Color(0.8f, 0.6f, 0.0f));
+                        Debug.DrawRay(objektA.transform.position, -Ff, Color.red);
+
 
                         objektA.netForce += Ff;
                         objektB.netForce -= Ff;

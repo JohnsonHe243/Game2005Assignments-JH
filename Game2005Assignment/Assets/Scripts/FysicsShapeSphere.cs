@@ -13,7 +13,6 @@ public class FysicsShapeSphere : FysicsShape
     public ColorType sphereColor = ColorType.White;
 
     public float radius = 1.0f;
-
     public override Shape GetShape()
     {
         return Shape.Sphere;
