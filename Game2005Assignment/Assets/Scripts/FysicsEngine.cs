@@ -78,10 +78,10 @@ public class FysicsEngine : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach (FysicsObject objekt in objekts)
-        {
-            objekt.GetComponent<Renderer>().material.color = Color.white;
-        }
+        //foreach (FysicsObject objekt in objekts)
+        //{
+        //    objekt.GetComponent<Renderer>().material.color = Color.white;
+        //}
         CollisionUpdate();
         KinematicUpdate();
     }
@@ -119,8 +119,8 @@ public class FysicsEngine : MonoBehaviour
                 {
                     // Colliding
                     // Changing the color for colliding objects.
-                    objektA.GetComponent<Renderer>().material.color = Color.red;
-                    objektB.GetComponent<Renderer>().material.color = Color.red;
+                    //objektA.GetComponent<Renderer>().material.color = Color.red;
+                    //objektB.GetComponent<Renderer>().material.color = Color.red;
 
                     //  Calculate gravity force
                     Vector3 Fg = GetGravityForce(objektA);
