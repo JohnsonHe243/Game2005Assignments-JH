@@ -10,7 +10,7 @@ public class FysicsObject : MonoBehaviour
     public float drag = 0.1f;
 
     public float gravityScale = 0.5f;
-    public float coefficientOfFriction;
+    public float coefficientOfFriction = 0.5f;
     public Vector3 velocity = Vector3.zero;
     public Vector3 netForce = Vector3.zero;
 
