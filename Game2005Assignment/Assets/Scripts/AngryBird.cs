@@ -15,7 +15,7 @@ public class AngryBird : MonoBehaviour
 
         Vector3 startPosition = new Vector3(0, startHeight, 0);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Launch!");
             GameObject newObject = Instantiate(projectileToCopy);

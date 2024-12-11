@@ -56,10 +56,10 @@ public class FysicsEngine : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach (FysicsObject obj in objects)
-        {
-            obj.GetComponent<Renderer>().material.color = Color.white;
-        }
+        //foreach (FysicsObject obj in objects)
+        //{
+        //    obj.GetComponent<Renderer>().material.color = Color.white;
+        //}
         KinematicUpdate();
         CollisionUpdate();
     }
