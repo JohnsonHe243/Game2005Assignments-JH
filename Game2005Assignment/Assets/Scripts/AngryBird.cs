@@ -6,7 +6,8 @@ public class AngryBird : MonoBehaviour
     public float speed = 15f;
     // public float startHeight = 1;
 
-    public GameObject projectileToCopy; // This can be a reference in the scene, or to a Prefab.
+    public GameObject projectile_1; // This can be a reference in the scene, or to a Prefab.
+    public GameObject projectile_2; 
 
     void Update()
     {
@@ -18,7 +19,7 @@ public class AngryBird : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Launch!");
-            GameObject newObject = Instantiate(projectileToCopy);
+            GameObject newObject = Instantiate(projectile_1);
             FysicsObject fysicsObject = newObject.GetComponent<FysicsObject>();
 
 
@@ -27,5 +28,13 @@ public class AngryBird : MonoBehaviour
             fysicsObject.transform.position = startPosition;
         }
         Debug.DrawLine(startPosition, startPosition + launchVelocity, Color.red);
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            GameObject BouncingBall = Instantiate(projectile_1);
+            FysicsObject fysicsObject = BouncingBall.GetComponent<FysicsObject>();
+            fysicsObject.velocity = Vector3.zero;
+            fysicsObject.transform.position = new Vector3(0, 10, 0);
+        }
     }
 }
