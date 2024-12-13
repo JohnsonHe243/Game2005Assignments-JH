@@ -197,8 +197,8 @@ public class FysicsEngine : MonoBehaviour
                             restitution = Mathf.Clamp01(objektCorrectedA.bounciness * objektCorrectedB.bounciness);
                         }
 
-                        float deltaV1D = (1.0f + restitution) * veloDotNormal;
                         // From note step 4: Impulse = (1 + resitution * Dot(v1Rel2, N) * m1 * m2 / (m1 + m2)
+                        float deltaV1D = (1.0f + restitution) * veloDotNormal;
                         float impulse1D = deltaV1D * objektCorrectedA.mass * objektCorrectedB.mass / (objektCorrectedA.mass + objektCorrectedB.mass);
                         // Impulse is in the direction of the collisionNormal
                         Vector3 impulse3D = collisionInfo.normal * impulse1D;

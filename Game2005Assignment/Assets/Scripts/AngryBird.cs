@@ -36,7 +36,7 @@ public class AngryBird : MonoBehaviour
             GameObject FlatPlane = Instantiate(plane);
             GameObject Ball = Instantiate(sphere);
             FysicsObject BoucingBall = Ball.GetComponent<FysicsObject>();
-            BoucingBall.velocity = Vector3.zero;
+            // BoucingBall.velocity = Vector3.zero;
             BoucingBall.transform.position = new Vector3(0, 10, 0);
 
         }
