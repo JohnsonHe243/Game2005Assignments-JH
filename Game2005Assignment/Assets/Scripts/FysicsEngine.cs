@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.Serialization;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class FysicsEngine : MonoBehaviour
 {
@@ -32,6 +35,7 @@ public class FysicsEngine : MonoBehaviour
     }
     public List<FysicsObject> objekts = new List<FysicsObject> ();
     public float dt = 0.02f;
+    public float minimumMomentumSqr = 0.01f;
     public Vector3 gravityAcceleration = new Vector3(0, -10, 0);
 
     public Vector3 GetGravityForce(FysicsObject objekt)
@@ -39,7 +43,16 @@ public class FysicsEngine : MonoBehaviour
         return gravityAcceleration * objekt.gravityScale * objekt.mass;
     }
 
-    // Start is called before the first frame update
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        //foreach (FysicsObject objekt in objekts)
+        //{
+        //    objekt.GetComponent<Renderer>().material.color = Color.white;
+        //}
+        CollisionUpdate();
+        KinematicUpdate();
+    }
     private void KinematicUpdate()
     {
         foreach (FysicsObject objekt in objekts)
@@ -62,29 +75,26 @@ public class FysicsEngine : MonoBehaviour
 
                 // Apply acceleration
                 objekt.velocity += accelerationThisFrame * dt;
+
+                Vector3 momentum = objekt.velocity * objekt.mass;
+                if (momentum.sqrMagnitude < minimumMomentumSqr)
+                {
+                    objekt.velocity = Vector3.zero;
+                }
                 Vector3 newPos = objekt.transform.position + objekt.velocity * dt;
                 objekt.transform.position = newPos;
 
                 // Debug drawing
-
                 // Velocity
                 Debug.DrawRay(objekt.transform.position, objekt.velocity, Color.magenta);
                 // Force of gravity
                 Debug.DrawRay(objekt.transform.position, Fg, new Color(0.5f, 0.0f, 0.4f));
+            } else
+            {
+                objekt.velocity = Vector3.zero;
             }
             objekt.netForce = Vector3.zero;
         }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        //foreach (FysicsObject objekt in objekts)
-        //{
-        //    objekt.GetComponent<Renderer>().material.color = Color.white;
-        //}
-        CollisionUpdate();
-        KinematicUpdate();
     }
     
     // Check for collision between objects.
@@ -97,6 +107,9 @@ public class FysicsEngine : MonoBehaviour
             for (int j = i + 1; j < objekts.Count; j++) // N
             {
                 FysicsObject objektB = objekts[j];
+
+                FysicsObject objektCorrectedA = objektA;
+                FysicsObject objektCorrectedB = objektB;
 
                 CollisionInfo collisionInfo = new CollisionInfo(false, Vector3.zero);
 
@@ -113,101 +126,99 @@ public class FysicsEngine : MonoBehaviour
                 else if (objektA.shape.GetShape() == FysicsShape.Shape.Plane &&
                          objektB.shape.GetShape() == FysicsShape.Shape.Sphere)
                 {
-                    collisionInfo = CollisionResponseSpherePlane((FysicsShapeSphere)objektB.shape, (FysicsShapePlane)objektA.shape);
+                    objektCorrectedA = objektB;
+                    objektCorrectedB = objektA;
+                    collisionInfo = CollisionResponseSpherePlane((FysicsShapeSphere)objektCorrectedA.shape, (FysicsShapePlane)objektCorrectedB.shape);
                 }
 
                 if (collisionInfo.didcollide)
                 {
                     // Colliding
                     // Changing the color for colliding objects.
-                    //objektA.GetComponent<Renderer>().material.color = Color.red;
-                    //objektB.GetComponent<Renderer>().material.color = Color.red;
+
+                   objektCorrectedA.GetComponent<Renderer>().material.color = Color.red;
+                   objektCorrectedB.GetComponent<Renderer>().material.color = Color.red;
 
                     //  Calculate gravity force
-                    Vector3 Fg = GetGravityForce(objektA);
+                    Vector3 Fg = GetGravityForce(objektCorrectedA);
 
                     // Calculate perpendicular component of gravity by project gravity vector onto normal
                     float gravityDotNormal = Vector3.Dot(Fg, collisionInfo.normal);
                     Vector3 gravityProjectedNormal = collisionInfo.normal * gravityDotNormal;
 
-                    // Add normal force due to gravity
-                    Vector3 Fn = -gravityProjectedNormal;
-                    Debug.DrawRay(objektA.transform.position, Fn, Color.green);
-
-                    objektA.netForce += Fn;
-                    objektB.netForce -= Fn;
-
                     // Calculate relative velocity determine if we should apply kinetic friction or not
-                    Vector3 veloARelativeToB = objektA.velocity - objektB.velocity;
+                    Vector3 veloARelativeToB = objektCorrectedA.velocity - objektCorrectedB.velocity;
                     // Project relative velocity onto the surface (e.g. subtract perpendicular component to a plane)
                     float veloDotNormal = Vector3.Dot(veloARelativeToB, collisionInfo.normal);
                     Vector3 veloProjectedNormal = collisionInfo.normal * veloDotNormal; // part of velocity aligned along the normal axis
-                    
-                    // Subtract velocity aligned with normal axis to the velocity of the plane projected perpendicular to collision normal.
-                    Vector3 veloARelativeToBProjectedOntoPlane = veloARelativeToB - veloProjectedNormal; // reltive motion between A and B in-plane
 
-                    // Friction
-                    if(veloARelativeToBProjectedOntoPlane.sqrMagnitude > 0.00001)
+                    // If dot-normal and gravity are in the same direction, ignore normal force, friction
+                    if (gravityDotNormal < 0.0f) // If they are in opposite directions, then do normal force and friction
                     {
-                        // Magnitude of friction is coefficient of friction times normal force magnitude
-                        float frictionMagnitude = Fn.magnitude * objektA.coefficientOfFriction;
-                        Vector3 Ff = -veloARelativeToBProjectedOntoPlane.normalized * frictionMagnitude;
+                        // Add normal force due to gravity
+                        Vector3 Fn = -gravityProjectedNormal;
+                        Debug.DrawRay(objektCorrectedA.transform.position, Fn, Color.green);
 
-                        Debug.DrawRay(objektA.transform.position, Ff, new Color(0.8f, 0.6f, 0.0f));
-                        Debug.DrawRay(objektA.transform.position, -Ff, Color.red);
+                        objektCorrectedA.netForce += Fn;
+                        objektCorrectedB.netForce -= Fn;
 
+                        // Subtract velocity aligned with normal axis to the velocity of the plane projected perpendicular to collision normal.
+                        Vector3 veloARelativeToBProjectedOntoPlane = veloARelativeToB - veloProjectedNormal; // reltive motion between A and B in-plane
 
-                        objektA.netForce += Ff;
-                        objektB.netForce -= Ff;
+                        // Friction
+                        if (veloARelativeToBProjectedOntoPlane.sqrMagnitude > 0.00001)
+                        {
+                            // Magnitude of friction is coefficient of friction times normal force magnitude
+                            float coeffcientOfFriction = Mathf.Clamp01(objektCorrectedA.grippiness * objektCorrectedB.grippiness);
+                            float frictionMagnitude = Fn.magnitude * coeffcientOfFriction;
+
+                            // Ff = u * || Fn || * -(vYouRelativeToBue / ||vYouRelativeToBue||)
+                            Vector3 Ff = -veloARelativeToBProjectedOntoPlane.normalized * frictionMagnitude;
+
+                            Debug.DrawRay(objektCorrectedA.transform.position, Ff, new Color(0.6f, 0.3f, 0.0f));
+
+                            objektCorrectedA.netForce += Ff;
+                            objektCorrectedB.netForce -= Ff;
+                        }
                     }
 
+                    // Bouncing/Applying impulse from collision 
+                    if (veloDotNormal < 0) // if objects are moving towards eachother
+                    {
+                        // Bounce!
+                        // Determine coefficient of restitution
+                        float restitution;
+                        if(veloDotNormal > -1) // Dampens motion if the relative velocity is really small
+                        {
+                            restitution = 0;
+                        } else
+                        {
+                            restitution = Mathf.Clamp01(objektCorrectedA.bounciness * objektCorrectedB.bounciness);
+                        }
+
+                        float deltaV1D = (1.0f + restitution) * veloDotNormal;
+                        // From note step 4: Impulse = (1 + resitution * Dot(v1Rel2, N) * m1 * m2 / (m1 + m2)
+                        float impulse1D = deltaV1D * objektCorrectedA.mass * objektCorrectedB.mass / (objektCorrectedA.mass + objektCorrectedB.mass);
+                        // Impulse is in the direction of the collisionNormal
+                        Vector3 impulse3D = collisionInfo.normal * impulse1D;
+
+                        Debug.DrawRay(objektCorrectedA.transform.position, impulse3D, Color.cyan, 0.2f, false);
+
+                        // Apply change in velocity based on impulse
+                        objektCorrectedA.velocity += -impulse3D / objektCorrectedA.mass;
+                        objektCorrectedB.velocity += impulse3D / objektCorrectedB.mass;
+                    }
                 }
             }
         }
     }
 
-    public static bool CollideSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
-    {
-        Vector3 Displacement= sphereA.transform.position - sphereB.transform.position;
-        float distance = Displacement.magnitude;
-        float overlap = (sphereA.radius + sphereB.radius) - distance;
-        if (overlap > 0.0f)
-        {
-            Vector3 collisionNormalBtoA = (Displacement / distance);
-            Vector3 minTranslationV = collisionNormalBtoA * overlap;
-            sphereA.transform.position += minTranslationV/2;
-            sphereB.transform.position -= minTranslationV/2;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public static bool IsCollidingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
-    {
-        Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
-        float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
-        float distanceToPlane = Mathf.Abs(positionAlongNormal);
-        float overlap = sphere.radius - distanceToPlane;
-        if (overlap > 0.0f)
-        {
-            //Vector3 minTranslationV = plane.Normal() * overlap;
-            //sphere.transform.position += minTranslationV;
-            sphere.transform.position += plane.Normal() * overlap;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     public static CollisionInfo CollisionResponseSphereSphere(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
     {
         Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
         float distance = Displacement.magnitude;
-        float overlap = (sphereA.radius + sphereB.radius) - distance;
+        float overlap = sphereA.radius + sphereB.radius - distance;
         if (overlap < 0)
         {
             return new CollisionInfo(false, Vector3.zero);
@@ -224,9 +235,28 @@ public class FysicsEngine : MonoBehaviour
             collisionNormalBtoA = (Displacement / distance);
         }
 
-        Vector3 minTranslationV = collisionNormalBtoA * overlap;
-        sphereA.transform.position += minTranslationV / 2;
-        sphereB.transform.position -= minTranslationV / 2;
+        bool aStatic = sphereA.GetComponent<FysicsObject>().isStatic;
+        bool bStatic = sphereB.GetComponent<FysicsObject>().isStatic;
+
+        Vector3 mtv = collisionNormalBtoA * overlap;
+
+        if (aStatic && bStatic)
+        {
+            return new CollisionInfo(true, collisionNormalBtoA);
+        }
+        else if (aStatic && !bStatic)
+        {
+            sphereB.transform.position -= mtv;
+        }
+        else if (aStatic && !bStatic)
+        {
+            sphereA.transform.position += mtv;
+        }
+        else
+        {
+            sphereA.transform.position -= mtv / 2;
+            sphereB.transform.position -= mtv / 2;
+        }
 
         return new CollisionInfo(true, collisionNormalBtoA);
     }
@@ -263,4 +293,40 @@ public class FysicsEngine : MonoBehaviour
     //    float distanceToPlane = Mathf.Abs(positionAlongNormal);
     //    return distanceToPlane < sphere.radius;
     //} 
+    //public static bool CollideSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
+    //{
+    //    Vector3 Displacement= sphereA.transform.position - sphereB.transform.position;
+    //    float distance = Displacement.magnitude;
+    //    float overlap = (sphereA.radius + sphereB.radius) - distance;
+    //    if (overlap > 0.0f)
+    //    {
+    //        Vector3 collisionNormalBtoA = (Displacement / distance);
+    //        Vector3 minTranslationV = collisionNormalBtoA * overlap;
+    //        sphereA.transform.position += minTranslationV/2;
+    //        sphereB.transform.position -= minTranslationV/2;
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
+    //public static bool IsCollidingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
+    //{
+    //    Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
+    //    float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
+    //    float distanceToPlane = Mathf.Abs(positionAlongNormal);
+    //    float overlap = sphere.radius - distanceToPlane;
+    //    if (overlap > 0.0f)
+    //    {
+    //        //Vector3 minTranslationV = plane.Normal() * overlap;
+    //        //sphere.transform.position += minTranslationV;
+    //        sphere.transform.position += plane.Normal() * overlap;
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
 }

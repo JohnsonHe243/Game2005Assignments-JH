@@ -4,7 +4,7 @@ public class AngryBird : MonoBehaviour
 {
     public float angleDegrees = 60f;
     public float speed = 15f;
-    public float startHeight = 1;
+    // public float startHeight = 1;
 
     public GameObject projectileToCopy; // This can be a reference in the scene, or to a Prefab.
 
@@ -13,7 +13,7 @@ public class AngryBird : MonoBehaviour
         Vector3 launchVelocity = new Vector3(speed * Mathf.Cos(angleDegrees * Mathf.Deg2Rad),
                                              speed * Mathf.Sin(angleDegrees * Mathf.Deg2Rad));
 
-        Vector3 startPosition = new Vector3(0, startHeight, 0);
+        Vector3 startPosition = transform.position; //new Vector3(0, startHeight, 0);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
