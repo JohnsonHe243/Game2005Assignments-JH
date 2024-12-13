@@ -9,8 +9,7 @@ public class AngryBird : MonoBehaviour
     // public float startHeight = 1;
 
     public GameObject plane;
-    public GameObject projectile_1; // This can be a reference in the scene, or to a Prefab.
-    public GameObject projectile_2;
+    public GameObject sphere; // This can be a reference in the scene, or to a Prefab.
 
     void Update()
     {
@@ -35,26 +34,37 @@ public class AngryBird : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball = Instantiate(projectile_1);
+            GameObject Ball = Instantiate(sphere);
             FysicsObject BoucingBall = Ball.GetComponent<FysicsObject>();
             BoucingBall.velocity = Vector3.zero;
             BoucingBall.transform.position = new Vector3(0, 10, 0);
 
         }
-
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball_1 = Instantiate(projectile_1);
-            GameObject Ball_2 = Instantiate(projectile_1);
+            GameObject Ball_1 = Instantiate(sphere);
+            GameObject Ball_2 = Instantiate(sphere);
 
             FysicsObject MovingBall = Ball_1.GetComponent<FysicsObject>();
             FysicsObject StationaryBall = Ball_2.GetComponent<FysicsObject>();
             MovingBall.velocity = new Vector3(30, 0, 0);
-            MovingBall.transform.position = new Vector3(-15, -4, 0);
-            StationaryBall.transform.position = new Vector3(15, -4, 0);
+            MovingBall.transform.position = new Vector3(-15, -7, 0);
+            StationaryBall.transform.position = new Vector3(15, -7, 0);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            GameObject FlatPlane = Instantiate(plane);
+            GameObject Ball_1 = Instantiate(sphere);
+            GameObject Ball_2 = Instantiate(sphere);
 
+            FysicsShapeSphere TopBall = Ball_1.GetComponent<FysicsShapeSphere>();
+            FysicsShapeSphere BottomBall = Ball_2.GetComponent<FysicsShapeSphere>();
+            TopBall.transform.position = new Vector3(0, 10, 0);
+            BottomBall.transform.position = new Vector3(0, 6.9f, 0);
+            BottomBall.radius = 2;
+
+        }
         if (Input.GetKeyDown(KeyCode.D))
         {
             foreach (FysicsObject objekt in FysicsEngine.Instance.objekts)
