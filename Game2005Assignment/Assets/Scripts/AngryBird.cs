@@ -32,13 +32,27 @@ public class AngryBird : MonoBehaviour
         //}
         Debug.DrawLine(startPosition, startPosition + launchVelocity, Color.red);
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             GameObject FlatPlane = Instantiate(plane);
-            GameObject BouncingBall = Instantiate(projectile_1);
-            FysicsObject fysicsObject = BouncingBall.GetComponent<FysicsObject>();
-            fysicsObject.velocity = Vector3.zero;
-            fysicsObject.transform.position = new Vector3(0, 10, 0);
+            GameObject Ball = Instantiate(projectile_1);
+            FysicsObject BoucingBall = Ball.GetComponent<FysicsObject>();
+            BoucingBall.velocity = Vector3.zero;
+            BoucingBall.transform.position = new Vector3(0, 10, 0);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            GameObject FlatPlane = Instantiate(plane);
+            GameObject Ball_1 = Instantiate(projectile_1);
+            GameObject Ball_2 = Instantiate(projectile_1);
+
+            FysicsObject MovingBall = Ball_1.GetComponent<FysicsObject>();
+            FysicsObject StationaryBall = Ball_2.GetComponent<FysicsObject>();
+            MovingBall.velocity = new Vector3(30, 0, 0);
+            MovingBall.transform.position = new Vector3(-15, -4, 0);
+            StationaryBall.transform.position = new Vector3(15, -4, 0);
         }
 
         if (Input.GetKeyDown(KeyCode.D))
