@@ -34,6 +34,7 @@ public class FysicsEngine : MonoBehaviour
         }
     }
     public List<FysicsObject> objekts = new List<FysicsObject> ();
+
     public float dt = 0.02f;
     public float minimumMomentumSqr = 0.01f;
     public Vector3 gravityAcceleration = new Vector3(0, -10, 0);
