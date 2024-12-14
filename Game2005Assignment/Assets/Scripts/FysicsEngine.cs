@@ -194,8 +194,10 @@ public class FysicsEngine : MonoBehaviour
                             restitution = 0;
                         } else
                         {
-                            restitution = Mathf.Clamp01(objektCorrectedA.bounciness * objektCorrectedB.bounciness);
+                            restitution = (objektCorrectedA.bounciness * objektCorrectedB.bounciness);
+                            //restitution = Mathf.Clamp01(objektCorrectedA.bounciness * objektCorrectedB.bounciness);
                         }
+                        Debug.Log("Restitution = " + restitution);
 
                         // From note step 4: Impulse = (1 + resitution * Dot(v1Rel2, N) * m1 * m2 / (m1 + m2)
                         float deltaV1D = (1.0f + restitution) * veloDotNormal;

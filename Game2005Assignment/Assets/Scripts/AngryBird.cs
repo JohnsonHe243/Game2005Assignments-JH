@@ -35,34 +35,32 @@ public class AngryBird : MonoBehaviour
         {
             GameObject FlatPlane = Instantiate(plane);
             GameObject Ball = Instantiate(sphere);
-            FysicsObject BoucingBall = Ball.GetComponent<FysicsObject>();
-            // BoucingBall.velocity = Vector3.zero;
-            BoucingBall.transform.position = new Vector3(0, 10, 0);
 
+            FysicsObject SteelBall = Ball.GetComponent<FysicsObject>();
+            SteelBall.transform.position = new Vector3(-15, 10, 0);
+            SteelBall.velocity = new Vector3(5, 0, 0);
+            SteelBall.material = FysicsObject.Material.Steel;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball_1 = Instantiate(sphere);
-            GameObject Ball_2 = Instantiate(sphere);
+            GameObject Ball = Instantiate(sphere);
 
-            FysicsObject MovingBall = Ball_1.GetComponent<FysicsObject>();
-            FysicsObject StationaryBall = Ball_2.GetComponent<FysicsObject>();
-            MovingBall.velocity = new Vector3(30, 0, 0);
-            MovingBall.transform.position = new Vector3(-15, -7, 0);
-            StationaryBall.transform.position = new Vector3(15, -7, 0);
+            FysicsObject WoodBall = Ball.GetComponent<FysicsObject>();
+            WoodBall.transform.position = new Vector3(-15, 10, 0);
+            WoodBall.velocity = new Vector3(5, 0, 0);
+            WoodBall.material = FysicsObject.Material.Wood;
+
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball_1 = Instantiate(sphere);
-            GameObject Ball_2 = Instantiate(sphere);
+            GameObject Ball = Instantiate(sphere);
 
-            FysicsShapeSphere TopBall = Ball_1.GetComponent<FysicsShapeSphere>();
-            FysicsShapeSphere BottomBall = Ball_2.GetComponent<FysicsShapeSphere>();
-            TopBall.transform.position = new Vector3(0, 10, 0);
-            BottomBall.transform.position = new Vector3(0, 6.9f, 0);
-            BottomBall.radius = 2;
+            FysicsObject ClothBall = Ball.GetComponent<FysicsObject>();
+            ClothBall.transform.position = new Vector3(-15, 10, 0);
+            ClothBall.velocity = new Vector3(5, 0, 0);
+            ClothBall.material = FysicsObject.Material.Cloth;
 
         }
         if (Input.GetKeyDown(KeyCode.D))
