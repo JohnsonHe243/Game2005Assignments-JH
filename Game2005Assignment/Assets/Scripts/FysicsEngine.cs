@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class FysicsEngine : MonoBehaviour
 {
@@ -131,6 +132,23 @@ public class FysicsEngine : MonoBehaviour
                     objektCorrectedB = objektA;
                     collisionInfo = CollisionResponseSpherePlane((FysicsShapeSphere)objektCorrectedA.shape, (FysicsShapePlane)objektCorrectedB.shape);
                 }
+                else if (objektA.shape.GetShape() == FysicsShape.Shape.Rect &&
+                         objektB.shape.GetShape() == FysicsShape.Shape.Rect)
+                {
+                    collisionInfo = CollisionResponseRects((FysicsShapeRect)objektA.shape, (FysicsShapeRect)objektB.shape);
+                }
+                else if (objektA.shape.GetShape() == FysicsShape.Shape.Sphere &&
+                         objektB.shape.GetShape() == FysicsShape.Shape.Rect)
+                {
+                    collisionInfo = CollisionResponseSphereRect((FysicsShapeSphere)objektA.shape, (FysicsShapeRect)objektB.shape);
+                }
+                else if(objektA.shape.GetShape() == FysicsShape.Shape.Rect &&
+                        objektB.shape.GetShape() == FysicsShape.Shape.Sphere)
+                {
+                    objektCorrectedA = objektB;
+                    objektCorrectedB = objektA;
+                    collisionInfo = CollisionResponseSphereRect((FysicsShapeSphere)objektCorrectedA.shape, (FysicsShapeRect)objektCorrectedB.shape);
+                }
 
                 if (collisionInfo.didcollide)
                 {
@@ -251,18 +269,118 @@ public class FysicsEngine : MonoBehaviour
         {
             sphereB.transform.position -= mtv;
         }
-        else if (aStatic && !bStatic)
+        else if (!aStatic && bStatic)
         {
             sphereA.transform.position += mtv;
         }
         else
         {
-            sphereA.transform.position -= mtv / 2;
+            sphereA.transform.position += mtv / 2;
             sphereB.transform.position -= mtv / 2;
         }
-
         return new CollisionInfo(true, collisionNormalBtoA);
     }
+
+    public static CollisionInfo CollisionResponseRects(FysicsShapeRect rectA, FysicsShapeRect rectB)
+    {
+        Vector3 displacement = rectA.transform.position - rectB.transform.position;
+
+        // Calculate overlap on X and Y axes
+        float overlapX = (rectA.width / 2 + rectB.width / 2) - Mathf.Abs(displacement.x);
+        float overlapY = (rectA.height / 2 + rectB.height / 2) - Mathf.Abs(displacement.y);
+
+        if (overlapX > 0.0f && overlapY > 0.0f)
+        {
+            // Resolve collision on the axis with the smallest overlap
+            Vector3 collisionNormalBtoA;
+            Vector3 mtv;
+            if (overlapX < overlapY)
+            {
+                collisionNormalBtoA = new Vector3(Mathf.Sign(displacement.x), 0, 0);
+                mtv = collisionNormalBtoA * overlapX;
+            }
+            else
+            {
+                collisionNormalBtoA = new Vector3(0, Mathf.Sign(displacement.y), 0);
+                mtv = collisionNormalBtoA * overlapY;
+            }
+
+            // Adjust positions based on static/dynamic flags
+            bool aStatic = rectA.GetComponent<FysicsObject>().isStatic;
+            bool bStatic = rectB.GetComponent<FysicsObject>().isStatic;
+
+            if (aStatic && !bStatic)
+            {
+                rectB.transform.position -= mtv;
+            }
+            else if (!aStatic && bStatic)
+            {
+                rectA.transform.position += mtv;
+            }
+            else if (!aStatic && !bStatic)
+            {
+                rectA.transform.position += mtv / 2;
+                rectB.transform.position -= mtv / 2;
+            }
+
+            return new CollisionInfo(true, collisionNormalBtoA);
+        }
+
+        return new CollisionInfo(false, Vector3.zero);
+    }
+
+
+    public static CollisionInfo CollisionResponseSphereRect(FysicsShapeSphere sphere, FysicsShapeRect rect)
+    {
+        Vector3 closestPoint = sphere.transform.position;
+        closestPoint.x = Mathf.Clamp(closestPoint.x, rect.transform.position.x - rect.width / 2, rect.transform.position.x + rect.width / 2);
+        closestPoint.y = Mathf.Clamp(closestPoint.y, rect.transform.position.y - rect.height / 2, rect.transform.position.y + rect.height / 2);
+        closestPoint.z = rect.transform.position.z;
+
+        Vector3 displacement = sphere.transform.position - closestPoint;
+
+        float distance = displacement.magnitude;
+
+        if (distance < sphere.radius)
+        {
+            // Overlap amount
+            float overlap = sphere.radius - distance;
+
+            // Collision normal
+            Vector3 collisionNormal = displacement.normalized;
+
+            // Resolve static vs dynamic objects
+            bool aStatic = sphere.GetComponent<FysicsObject>().isStatic;
+            bool bStatic = rect.GetComponent<FysicsObject>().isStatic;
+
+            Vector3 mtv = collisionNormal * overlap; // Minimum Translation Vector
+
+            if (aStatic && bStatic)
+            {
+                return new CollisionInfo(true, collisionNormal);
+            }
+            else if (aStatic && !bStatic)
+            {
+                rect.transform.position -= mtv;
+            }
+            else if (!aStatic && bStatic)
+            {
+                sphere.transform.position += mtv;
+            }
+            else
+            {
+                sphere.transform.position += mtv / 2;
+                rect.transform.position -= mtv / 2;
+            }
+
+            return new CollisionInfo(true, collisionNormal);
+        }
+
+        // No collision
+        return new CollisionInfo(false, Vector3.zero);
+    }
+
+
     public static CollisionInfo CollisionResponseSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
     {
         Vector3 planeToSphere = sphere.transform.position - plane.transform.position;

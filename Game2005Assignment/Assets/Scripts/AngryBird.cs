@@ -18,58 +18,58 @@ public class AngryBird : MonoBehaviour
 
         Vector3 startPosition = transform.position; //new Vector3(0, startHeight, 0);
 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    Debug.Log("Launch!");
-        //    GameObject newObject = Instantiate(projectile_1);
-        //    FysicsObject fysicsObject = newObject.GetComponent<FysicsObject>();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Launch!");
+            GameObject newObject = Instantiate(sphere);
+            FysicsObject fysicsObject = newObject.GetComponent<FysicsObject>();
 
 
-        //    fysicsObject.velocity = launchVelocity;
+            fysicsObject.velocity = launchVelocity;
 
-        //    fysicsObject.transform.position = startPosition;
-        //}
+            fysicsObject.transform.position = startPosition;
+        }
         Debug.DrawLine(startPosition, startPosition + launchVelocity, Color.red);
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball = Instantiate(sphere);
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    GameObject FlatPlane = Instantiate(plane);
+        //    GameObject Ball = Instantiate(sphere);
 
-            FysicsObject SteelBall = Ball.GetComponent<FysicsObject>();
-            SteelBall.transform.position = new Vector3(-15, 10, 0);
-            SteelBall.velocity = new Vector3(5, 0, 0);
-            SteelBall.material = FysicsObject.Material.Steel;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball = Instantiate(sphere);
+        //    FysicsObject SteelBall = Ball.GetComponent<FysicsObject>();
+        //    SteelBall.transform.position = new Vector3(-15, 10, 0);
+        //    SteelBall.velocity = new Vector3(5, 0, 0);
+        //    SteelBall.material = FysicsObject.Material.Steel;
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    GameObject FlatPlane = Instantiate(plane);
+        //    GameObject Ball = Instantiate(sphere);
 
-            FysicsObject WoodBall = Ball.GetComponent<FysicsObject>();
-            WoodBall.transform.position = new Vector3(-15, 10, 0);
-            WoodBall.velocity = new Vector3(5, 0, 0);
-            WoodBall.material = FysicsObject.Material.Wood;
+        //    FysicsObject WoodBall = Ball.GetComponent<FysicsObject>();
+        //    WoodBall.transform.position = new Vector3(-15, 10, 0);
+        //    WoodBall.velocity = new Vector3(5, 0, 0);
+        //    WoodBall.material = FysicsObject.Material.Wood;
 
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            GameObject FlatPlane = Instantiate(plane);
-            GameObject Ball = Instantiate(sphere);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    GameObject FlatPlane = Instantiate(plane);
+        //    GameObject Ball = Instantiate(sphere);
 
-            FysicsObject ClothBall = Ball.GetComponent<FysicsObject>();
-            ClothBall.transform.position = new Vector3(-15, 10, 0);
-            ClothBall.velocity = new Vector3(5, 0, 0);
-            ClothBall.material = FysicsObject.Material.Cloth;
+        //    FysicsObject ClothBall = Ball.GetComponent<FysicsObject>();
+        //    ClothBall.transform.position = new Vector3(-15, 10, 0);
+        //    ClothBall.velocity = new Vector3(5, 0, 0);
+        //    ClothBall.material = FysicsObject.Material.Cloth;
 
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            foreach (FysicsObject objekt in FysicsEngine.Instance.objekts)
-            {
-                Destroy(objekt.gameObject);
-                FysicsEngine.Instance.objekts = new List<FysicsObject>();
-            }
-        }
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    foreach (FysicsObject objekt in FysicsEngine.Instance.objekts)
+        //    {
+        //        Destroy(objekt.gameObject);
+        //        FysicsEngine.Instance.objekts = new List<FysicsObject>();
+        //    }
+        //}
     }
 }
