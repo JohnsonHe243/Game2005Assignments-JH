@@ -48,10 +48,7 @@ public class FysicsEngine : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //foreach (FysicsObject objekt in objekts)
-        //{
-        //    objekt.GetComponent<Renderer>().material.color = Color.white;
-        //}
+
         CollisionUpdate();
         KinematicUpdate();
     }
@@ -65,12 +62,6 @@ public class FysicsEngine : MonoBehaviour
             // Position
             if (!objekt.isStatic) // boolean used to allow objects to move by kinematic or not
             {
-                //Vector3 vSquared = objekt.velocity.normalized * objekt.velocity.sqrMagnitude;
-                //Vector3 dragForce = -objekt.drag * vSquared;
-
-                //// Add drag
-                //objekt.netForce += dragForce;
-
                 // Velocity update according to gravity acceleration
                 Vector3 accelerationThisFrame = objekt.netForce / objekt.mass;
                 //a = F/m
@@ -153,11 +144,6 @@ public class FysicsEngine : MonoBehaviour
                 if (collisionInfo.didcollide)
                 {
                     // Colliding
-                    // Changing the color for colliding objects.
-
-                   objektCorrectedA.GetComponent<Renderer>().material.color = Color.red;
-                   objektCorrectedB.GetComponent<Renderer>().material.color = Color.red;
-
                     //  Calculate gravity force
                     Vector3 Fg = GetGravityForce(objektCorrectedA);
 
@@ -213,9 +199,7 @@ public class FysicsEngine : MonoBehaviour
                         } else
                         {
                             restitution = (objektCorrectedA.bounciness * objektCorrectedB.bounciness);
-                            //restitution = Mathf.Clamp01(objektCorrectedA.bounciness * objektCorrectedB.bounciness);
                         }
-                        Debug.Log("Restitution = " + restitution);
 
                         // From note step 4: Impulse = (1 + resitution * Dot(v1Rel2, N) * m1 * m2 / (m1 + m2)
                         float deltaV1D = (1.0f + restitution) * veloDotNormal;
@@ -400,54 +384,4 @@ public class FysicsEngine : MonoBehaviour
 
         return new CollisionInfo(true, plane.Normal());
     }
-
-    //public static bool IsOverlappingSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
-    //{
-    //    Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
-    //    float distance = Displacement.magnitude;
-    //    return distance < sphereA.radius + sphereB.radius;
-    //}
-    //public static bool IsOverlappingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
-    //{
-    //    Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
-    //    float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
-    //    float distanceToPlane = Mathf.Abs(positionAlongNormal);
-    //    return distanceToPlane < sphere.radius;
-    //} 
-    //public static bool CollideSpheres(FysicsShapeSphere sphereA, FysicsShapeSphere sphereB)
-    //{
-    //    Vector3 Displacement= sphereA.transform.position - sphereB.transform.position;
-    //    float distance = Displacement.magnitude;
-    //    float overlap = (sphereA.radius + sphereB.radius) - distance;
-    //    if (overlap > 0.0f)
-    //    {
-    //        Vector3 collisionNormalBtoA = (Displacement / distance);
-    //        Vector3 minTranslationV = collisionNormalBtoA * overlap;
-    //        sphereA.transform.position += minTranslationV/2;
-    //        sphereB.transform.position -= minTranslationV/2;
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
-    //public static bool IsCollidingSpherePlane(FysicsShapeSphere sphere, FysicsShapePlane plane)
-    //{
-    //    Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
-    //    float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
-    //    float distanceToPlane = Mathf.Abs(positionAlongNormal);
-    //    float overlap = sphere.radius - distanceToPlane;
-    //    if (overlap > 0.0f)
-    //    {
-    //        //Vector3 minTranslationV = plane.Normal() * overlap;
-    //        //sphere.transform.position += minTranslationV;
-    //        sphere.transform.position += plane.Normal() * overlap;
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
 }
